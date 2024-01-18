@@ -50,7 +50,7 @@ A estrutura do banco de dados é definida pelos seguintes campos:
 - id: Identificador único da anotação
 - título do filme
 - descrição do filme
-- nota que o usuário deu para o filme (valor inteiro de 1 a 5)
+- nota que o usuário deu para o filme (valor de 1 a 5)
 - id do usuário (referência à tabela de usuários)
 - data de criação
 - data de edição
