@@ -6,8 +6,6 @@ const sqliteConnection = require('../database/sqlite')
     class NotesController {
         async create(request, response) {
             try {
-                console.log("Create function is called.");
-    
                 const { title, description, rating, tags } = request.body;
                 const { user_id } = request.params;
     
@@ -30,9 +28,7 @@ const sqliteConnection = require('../database/sqlite')
                     };
                 });
     
-                console.log("Inserting tags:", tagsInsert);
                 await knex("tags").insert(tagsInsert);
-                console.log("Tags inserted successfully.");
     
                 response.json();
             } catch (error) {
