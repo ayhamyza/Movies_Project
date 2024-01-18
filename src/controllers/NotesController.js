@@ -3,40 +3,42 @@ const knex = require("../database/knex")
 const AppError = require('../utils/AppError') 
 const sqliteConnection = require('../database/sqlite') 
 
-class NotesController {
-    async create(request, response) {
-
-        console.log("Create function is called.");
-
-        const {title, description, rating, tags} = request.body
-        const { user_id } = request.params
-
-        const [note_id] = await knex ("movie_notes").insert({
-            title,
-            description,
-            rating,
-            user_id
-        })
-
-        const tagsInsert = tags.map(name => {
-            return {
-                note_id,
-                user_id,
-                name
+    class NotesController {
+        async create(request, response) {
+            try {
+                console.log("Create function is called.");
+    
+                const { title, description, rating, tags } = request.body;
+                const { user_id } = request.params;
+    
+                if (rating > 5) {
+                    throw new AppError("Nota deve ser até 5.");
+                }
+    
+                const [note_id] = await knex("movie_notes").insert({
+                    title,
+                    description,
+                    rating,
+                    user_id
+                });
+    
+                const tagsInsert = tags.map(name => {
+                    return {
+                        note_id,
+                        user_id,
+                        name
+                    };
+                });
+    
+                console.log("Inserting tags:", tagsInsert);
+                await knex("tags").insert(tagsInsert);
+                console.log("Tags inserted successfully.");
+    
+                response.json();
+            } catch (error) {
+                response.status(400).json({ error: error.message });
             }
-        })
-
-
-        console.log("Inserting tags:", tagsInsert);
-        await knex("tags").insert(tagsInsert);
-        console.log("Tags inserted successfully.");
-
-       
-
-        response.json()
-    }
-
-
+        }
 
     async show(request, response) { 
         const { id } = request.params
@@ -125,3 +127,5 @@ class NotesController {
 }
 
 module.exports = NotesController;
+
+
